@@ -14,7 +14,7 @@ void SetConsoleSize(int Width, int Height) {
 	MoveWindow(console, r.left, r.top, Width, Height, TRUE);
 }
 
-class Clock {
+class Watch {
 public:
 	static void DisplayTime() {
 		char Stop = '\0';
@@ -115,10 +115,63 @@ public:
 	}
 };
 
+class StopWatch {
+private:
+	int Hours, Minutes, Seconds;
+	void DisplayTime() {
+		cout << "Time -> " << Hours << " : " << Minutes << " : " << Seconds << endl;
+		cout << "\nPress Any Key to Stop\n";
+	}
+	void StartStopWatch() {
+		cout << "Time -> 00 : 00 : 00\n";
+		cout << "\nPress Any Key to start Stop Watch\n";
+		_getch();
+
+	}
+	void StopWatchAlgorithm() {
+		Seconds++;
+		while (Seconds > 60 || Minutes > 60) {
+			if (Seconds > 60) {
+				Seconds -= 60;
+				Minutes++;
+			}
+			if (Minutes > 60) {
+				Minutes -= 60;
+				Hours++;
+			}
+		}
+	}
+public:
+	void RunStopWatch() {
+		StartStopWatch();
+		system("cls");
+		while (true) {
+			DisplayTime();
+			StopWatchAlgorithm();
+			Sleep(1000);
+			if (_kbhit()) {
+				switch (_getch()) {
+				default:
+					cout << "\nStop Watch has been Stopped...\n";
+					cout << "Press any Key to return to Menu\n";
+					_getch();
+				}
+			}
+			system("cls");
+		}
+	}
+	StopWatch() {
+		Hours = 0;
+		Minutes = 0;
+		Seconds = 0;
+	}
+};
+
 class DigitalClock {
 private:
-	Clock C;
+	Watch W;
 	Timer T;
+	StopWatch S;
 	char MainMenuOPT;
 	void MainMenu() {
 		cout << "\n\t\t\tWELCOME TO DIGITAL CLOCK\n" << endl;
@@ -138,12 +191,17 @@ public:
 		switch (MainMenuOPT) {
 		case '1' : 
 			system("cls");
-			C.DisplayTime();
+			W.DisplayTime();
 			goto Start;
 			break;
 		case '2':
 			system("cls");
 			T.ExecuteTimer();
+			goto Start;
+			break;
+		case '3':
+			system("cls");
+			S.RunStopWatch();
 			goto Start;
 			break;
 		default: 
@@ -155,7 +213,6 @@ public:
 		MainMenuOPT = '\0';
 	}
 };
-
 
 int main() {
 	DigitalClock D;
