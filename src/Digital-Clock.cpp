@@ -35,8 +35,90 @@ public:
 	}
 };
 
+class Timer {
+private:
+	int Hours, Minutes, Seconds;
+	void DisplayTime() {
+		cout << "Time -> " << Hours << " : " << Minutes << " : " << Seconds << endl;
+	}
+	void TimerMenu() {
+		cout << "Set Time in 'HH : MM : SS' Format\n";
+		cout << "Current Time -> ";
+		cin >> Hours;
+		system("cls");
+		cout << "Enter Time in 'HH : MM : SS' Format\n";
+		cout << "Current Time -> " << Hours << " : ";
+		cin >> Minutes;
+		system("cls");
+		cout << "Enter Time in 'HH : MM : SS' Format\n";
+		cout << "Current Time -> " << Hours << " : " << Minutes << " : ";
+		cin >> Seconds;
+		system("cls");
+		cout << "Enter Time in 'HH : MM : SS' Format\n";
+		cout << "Current Time -> " << Hours << " : " << Minutes << " : " << Seconds << endl;
+		Seconds++;
+		cout << "\nTimer Set...\n";
+		cout << "Press Any Key to Start Timer\n";
+		_getch();
+	}
+	void TimerAlgorithm() {
+		while (Minutes > 60 || Seconds > 60 || Minutes < 0 || Seconds == 0) {
+			if (Seconds > 60) {
+				Seconds -= 60;
+				Minutes++;
+			}
+			if (Seconds == 0) {
+				Minutes--;
+				Seconds += 60;
+			}
+			if (Minutes > 60) {
+				Minutes -= 60;
+				Hours++;
+			}
+			if (Minutes < 0) {
+				Hours--;
+				Minutes += 60;
+			}
+		}
+		Seconds--;
+	}
+	void RunTimer() {
+		TimerMenu();
+		while (true) {
+			if (Hours == 0 && Minutes == 0 && Seconds == 0) {
+				return;
+			}
+			system("cls");
+			TimerAlgorithm();
+			DisplayTime();
+			Sleep(1000);
+		}
+	}
+public:
+	void ExecuteTimer() {
+		RunTimer();
+		cout << "\n\nAlarm...\nPress Any Key to Stop Alarm and Return to Menu";
+		while (true) {
+			cout << "\a";
+			Sleep(1600);
+			if (_kbhit()) {
+				switch (_getch()) {
+				default: return;
+				}
+			}
+		}
+	}
+	Timer() {
+		Hours = 0;
+		Minutes = 0;
+		Seconds = 0;
+	}
+};
+
 class DigitalClock {
 private:
+	Clock C;
+	Timer T;
 	char MainMenuOPT;
 	void MainMenu() {
 		cout << "\n\t\t\tWELCOME TO DIGITAL CLOCK\n" << endl;
@@ -56,7 +138,15 @@ public:
 		switch (MainMenuOPT) {
 		case '1' : 
 			system("cls");
-			Clock::DisplayTime();
+			C.DisplayTime();
+			goto Start;
+			break;
+		case '2':
+			system("cls");
+			T.ExecuteTimer();
+			goto Start;
+			break;
+		default: 
 			goto Start;
 			break;
 		}
